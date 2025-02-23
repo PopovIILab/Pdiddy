@@ -1,5 +1,7 @@
 # Pdiddy: Pseudogymnoascus Destructans: Insights into Dating and Definition Study
 
+> This is the repository for supplementary materials for the upcoming publication
+
 **Pipeline:**
 
 <img src="https://github.com/PopovIILab/Pdiddy/blob/main/imgs/Pdiddy.png" width="100%"/>
