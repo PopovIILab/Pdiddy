@@ -101,14 +101,14 @@ pangenome_scatter <- ggplot(pangenome_df, aes(x = num_fam, y = nb_members)) +
   # Plot all points in grey with transparency
   geom_point(data = pangenome_df[pangenome_df$nb_members < 15, ],
              color = "grey",
-             alpha = 0.5) +
+             alpha = 0.75) +
   
   # Highlight gene family 314
   geom_point(
     data = pangenome_df[pangenome_df$nb_members == 15, ],
     aes(x = num_fam, y = nb_members),
     color = "green",
-    alpha = 0.5,
+    alpha = 0.75,
     size = 1,
     shape = 21,
     stroke = 2
@@ -119,7 +119,7 @@ pangenome_scatter <- ggplot(pangenome_df, aes(x = num_fam, y = nb_members)) +
     data = pangenome_df[pangenome_df$nb_members == 19, ],
     aes(x = num_fam, y = nb_members),
     color = "red",
-    alpha = 0.5,
+    alpha = 0.75,
     size = 1,
     shape = 21,
     stroke = 2
