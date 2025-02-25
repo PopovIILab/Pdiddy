@@ -12,7 +12,7 @@ setwd(main_dir)
 if (!require("pacman"))
   install.packages("pacman")
 
-pacman::p_load(ggplot2, dplyr, tidyr, ggnewscale)
+pacman::p_load(ggplot2, dplyr, tidyr, ggnewscale, ggrepel)
 
 # Read the gene_countsset
 pangenome_df <- read.csv("Pangenome/PanGenome-LeMy.All.prt-clust-0.8-mode1.lst.summary.txt")
@@ -125,6 +125,24 @@ pangenome_scatter <- ggplot(pangenome_df, aes(x = num_fam, y = nb_members)) +
     stroke = 2
   ) +
   
+  geom_text_repel(
+    data = pangenome_df[pangenome_df$nb_members == 15, ],
+    aes(x = num_fam, y = nb_members, label = paste("Gene family:", num_fam)),
+    size = 4,
+    fontface = "bold",
+    nudge_x = c(0),
+    nudge_y = c(1, 2)
+  ) +
+  
+  geom_text_repel(
+    data = pangenome_df[pangenome_df$nb_members == 19, ],
+    aes(x = num_fam, y = nb_members, label = paste("Gene family:", num_fam)),
+    size = 4,
+    fontface = "bold",
+    nudge_x = c(0),
+    nudge_y = c(-1)
+  ) +
+  
   # Add a horizontal dashed line at y = 70
   geom_hline(
     yintercept = 14,
@@ -134,7 +152,7 @@ pangenome_scatter <- ggplot(pangenome_df, aes(x = num_fam, y = nb_members)) +
   ) +
   
   # Customize axis labels and breaks
-  scale_x_continuous(breaks = seq(0, 6000, by = 500)) +  # Display every x-axis label
+  scale_x_continuous(breaks = seq(0, 2000, by = 250)) +  # Display every x-axis label
   scale_y_continuous(breaks = seq(0, max(pangenome_df$nb_members), by = 5)) +  # Display y-axis labels every 10 units
   
   # Remove title and legend
