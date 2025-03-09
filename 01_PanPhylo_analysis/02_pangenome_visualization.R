@@ -12,7 +12,7 @@ setwd(main_dir)
 if (!require("pacman"))
   install.packages("pacman")
 
-pacman::p_load(ggplot2, dplyr, tidyr, ggnewscale, ggrepel)
+pacman::p_load(ggplot2, dplyr, tidyr, ggnewscale, ggrepel, patchwork)
 
 # Read the gene_countsset
 pangenome_df <- read.csv("Pangenome/PanGenome-LeMy.All.prt-clust-0.8-mode1.lst.summary.txt")
@@ -27,9 +27,9 @@ pangenome_df_1 <- pangenome_df %>%
     Core = ifelse(nb_members == 24, "Core", NA),
     # Core genes (present in all genomes)
     Shared = ifelse(nb_members > 1 &
-                      nb_members < 24, "Shared", NA),
+                      nb_members < 24, "Shell", NA),
     # Shared genes (present in some genomes)
-    Unique = ifelse(nb_members == 1, "Unique", NA)  # Unique genes (present in only one genome)
+    Unique = ifelse(nb_members == 1, "Cloud", NA)  # Unique genes (present in only one genome)
   )
 
 # Count the number of genes in each category
@@ -60,8 +60,8 @@ gene_counts$label <- paste0(gene_counts$Type,
 
 colors <- c(
   "Core" = "#d9e7f1",
-  "Shared" = "#743f96",
-  "Unique" = "#8dadd1"
+  "Shell" = "#743f96",
+  "Cloud" = "#8dadd1"
 )
 
 # Make the plot
@@ -103,6 +103,28 @@ pangenome_scatter <- ggplot(pangenome_df, aes(x = num_fam, y = nb_members)) +
              color = "grey",
              alpha = 0.75) +
   
+  # Highlight cloud genome
+  geom_point(
+    data = pangenome_df[pangenome_df$nb_members == 1, ],
+    aes(x = num_fam, y = nb_members),
+    color = "#8dadd1",
+    alpha = 0.75,
+    size = 1,
+    shape = 19,
+    stroke = 2
+  ) +
+  
+  # Highlight shell genome
+  geom_point(
+    data = pangenome_df[pangenome_df$nb_members > 1 & pangenome_df$nb_members < 15, ],
+    aes(x = num_fam, y = nb_members),
+    color = "#743f96",
+    alpha = 0.75,
+    size = 1,
+    shape = 19,
+    stroke = 2
+  ) +
+  
   # Highlight gene family 314
   geom_point(
     data = pangenome_df[pangenome_df$nb_members == 15, ],
@@ -127,7 +149,11 @@ pangenome_scatter <- ggplot(pangenome_df, aes(x = num_fam, y = nb_members)) +
   
   geom_text_repel(
     data = pangenome_df[pangenome_df$nb_members == 15, ],
-    aes(x = num_fam, y = nb_members, label = paste("Gene family:", num_fam)),
+    aes(
+      x = num_fam,
+      y = nb_members,
+      label = paste("Gene family:", num_fam)
+    ),
     size = 4,
     fontface = "bold",
     nudge_x = c(0),
@@ -136,7 +162,11 @@ pangenome_scatter <- ggplot(pangenome_df, aes(x = num_fam, y = nb_members)) +
   
   geom_text_repel(
     data = pangenome_df[pangenome_df$nb_members == 19, ],
-    aes(x = num_fam, y = nb_members, label = paste("Gene family:", num_fam)),
+    aes(
+      x = num_fam,
+      y = nb_members,
+      label = paste("Gene family:", num_fam)
+    ),
     size = 4,
     fontface = "bold",
     nudge_x = c(0),
@@ -168,5 +198,18 @@ ggsave(
   pangenome_scatter,
   width = 10,
   height = 6,
+  dpi = 600
+)
+
+######################
+###### COMBINED ######
+######################
+
+everything <- (pangenome_donut + pangenome_scatter) + plot_annotation(tag_levels = list(c("A", "B")))
+ggsave(
+  "imgs/combined_pangenome.png",
+  plot = everything,
+  width = 18,
+  height = 8,
   dpi = 600
 )
