@@ -10,6 +10,26 @@ pacman::p_load(dplyr, raster, sf, stars, tmap, terra)
 
 options(scipen = 999)
 
+# Read metadata.tsv
+metadata <- read.delim("map_metadata.tsv", header = TRUE, sep = "\t")
+
+# Extract country dynamically
+country_usa <- metadata %>%
+  filter(grepl("Pseudogymnoascus destructans", AN_OrganismName)) %>%
+  pull(Country)
+
+country_antarctica <- metadata %>%
+  filter(grepl(
+    paste(
+      "Thelebolus microsporus",
+      "Antarctomyces pellizariae",
+      "Antarctomyces psychrotrophicus",
+      sep = "|"
+    ),
+    AN_OrganismName
+  )) %>%
+  pull(Country)
+
 ne = 'natural_earth_vector/packages/natural_earth_vector.gpkg'
 countries = read_sf(ne, 'ne_110m_admin_0_countries')
 ocean = read_sf(ne, 'ne_110m_ocean')
@@ -43,13 +63,13 @@ tempp = st_as_stars(tempp_terra)
 
 # Filter countries to leave only needed
 lyrp$usa <- lyrp$countries %>%
-  filter(NAME %in% c("United States of America"))
+  filter(NAME %in% country_usa)
 
-lyrp$canada <- lyrp$countries %>%
-  filter(NAME %in% c("Canada"))
+#lyrp$canada <- lyrp$countries %>%
+#filter(NAME %in% c("Canada"))
 
 lyrp$antarctica <- lyrp$countries %>%
-  filter(NAME %in% c("Antarctica"))
+  filter(NAME %in% country_antarctica[1])
 
 # Plotting the map
 tm_shape(tempp) +
@@ -90,21 +110,21 @@ tm_shape(tempp) +
   
   #tm_shape(lyrp$canada) +
   #tm_dots(
-    #col = 'brown1',
-    #size = 1.5,
-    #border.col = 'black',
-    #border.lwd = 1.7
+  #col = 'brown1',
+  #size = 1.5,
+  #border.col = 'black',
+  #border.lwd = 1.7
   #) +
   #tm_text(
-    #text = "NAME",
-    #size = 1,
-    #fontface = "bold",
-    #col = "black",
-    #bgcol = "white",
-    #bgcol_alpha = 1,
-    #just = "right",
-    #xmod = -2.5,
-    #shadow = TRUE
+  #text = "NAME",
+  #size = 1,
+  #fontface = "bold",
+  #col = "black",
+  #bgcol = "white",
+  #bgcol_alpha = 1,
+  #just = "right",
+  #xmod = -2.5,
+  #shadow = TRUE
   #) +
   
   # Добавляем страны
