@@ -62,7 +62,7 @@ colnames(meta.loc) <- c("Location")
 
 # Read the tree file
 
-dated_tree <- read.beast("data/dating_tree.tree")
+dated_tree <- read.beast("data/dating_super_tree_ready.tree")
 
 # Midpoint root the tree
 
@@ -71,17 +71,17 @@ dated_tree <- read.beast("data/dating_tree.tree")
 # Draft tree
 
 dated_tree_fig <- ggtree(dated_tree) %<+% metadata +
-  xlim(0, 135) +
+  xlim(0, 150) +
   geom_hilight(
-    mapping = aes(subset = node %in% c(26), fill = S),
+    mapping = aes(subset = node %in% c(34), fill = S),
     fill = "steelblue",
     alpha = .6,
     extend = 40
   ) +
   geom_tiplab(
     aes(
-      label = Full.Name,
-      fontface = ifelse(grepl("^NC_033907", Full.Name), "bold", "plain"),
+      label = AN_OrganismName,
+      fontface = ifelse(grepl("^NC_033907", AN_OrganismName), "bold", "plain"),
     ),
     align = TRUE,
     geom = "label",
@@ -92,9 +92,9 @@ dated_tree_fig <- ggtree(dated_tree) %<+% metadata +
   geom_treescale(x = 0, y = -0.25, width = 10) +
   
   # Add node ages as text labels, excluding NA and 0 values
-  geom_text2(aes(subset = !is.na(height_median) & height_median != 0, 
+  geom_text2(aes(subset = !is.na(height_median) & abs(height_median) > 1e-5, 
                  label = round(height_median, 2)), 
-             hjust = -0.5, vjust = 0.5, size = 3, color = "black")
+             hjust = -0.5, vjust = 0.5, size = 4, color = "black", fontface = "bold")
 
 # Onehot encode bootstrap values (<70 = 0; >70 = 1)
 
@@ -114,9 +114,10 @@ dated_tree_fig <- dated_tree_fig + new_scale_color() +
                      guide = "none")
 
 ggsave(
-  'imgs/dated_tree.png',
+  'imgs/dated_super_tree.png',
   dated_tree_fig,
   width = 16,
-  height = 10,
+  height = 12,
   dpi = 600
 )
+
