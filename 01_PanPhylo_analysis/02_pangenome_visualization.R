@@ -15,7 +15,7 @@ if (!require("pacman"))
 pacman::p_load(ggplot2, dplyr, tidyr, ggnewscale, ggrepel, patchwork)
 
 # Read the gene_countsset
-pangenome_df <- read.csv("Pangenome/PanGenome-LeMy.All.prt-clust-0.8-mode1.lst.summary.txt")
+pangenome_df <- read.csv("pangenome/Pangenome/PanGenome-LeMy.All.prt-clust-0.9-mode1.lst.summary.txt")
 
 #######################
 # Part 1: Donut chart #
@@ -98,10 +98,6 @@ ggsave(
 
 # Create the base plot
 pangenome_scatter <- ggplot(pangenome_df, aes(x = num_fam, y = nb_members)) +
-  # Plot all points in grey with transparency
-  geom_point(data = pangenome_df[pangenome_df$nb_members < 15, ],
-             color = "grey",
-             alpha = 0.75) +
   
   # Highlight cloud genome
   geom_point(
@@ -116,7 +112,7 @@ pangenome_scatter <- ggplot(pangenome_df, aes(x = num_fam, y = nb_members)) +
   
   # Highlight shell genome
   geom_point(
-    data = pangenome_df[pangenome_df$nb_members > 1 & pangenome_df$nb_members < 15, ],
+    data = pangenome_df[pangenome_df$nb_members > 1 & pangenome_df$nb_members < 16, ],
     aes(x = num_fam, y = nb_members),
     color = "#743f96",
     alpha = 0.75,
@@ -127,7 +123,7 @@ pangenome_scatter <- ggplot(pangenome_df, aes(x = num_fam, y = nb_members)) +
   
   # Highlight gene family 314
   geom_point(
-    data = pangenome_df[pangenome_df$nb_members == 15, ],
+    data = pangenome_df[pangenome_df$nb_members >= 16, ],
     aes(x = num_fam, y = nb_members),
     color = "green",
     alpha = 0.75,
@@ -136,19 +132,8 @@ pangenome_scatter <- ggplot(pangenome_df, aes(x = num_fam, y = nb_members)) +
     stroke = 2
   ) +
   
-  # Highlight gene family 368
-  geom_point(
-    data = pangenome_df[pangenome_df$nb_members == 19, ],
-    aes(x = num_fam, y = nb_members),
-    color = "red",
-    alpha = 0.75,
-    size = 1,
-    shape = 21,
-    stroke = 2
-  ) +
-  
   geom_text_repel(
-    data = pangenome_df[pangenome_df$nb_members == 15, ],
+    data = pangenome_df[pangenome_df$nb_members >= 16, ],
     aes(
       x = num_fam,
       y = nb_members,
@@ -156,34 +141,21 @@ pangenome_scatter <- ggplot(pangenome_df, aes(x = num_fam, y = nb_members)) +
     ),
     size = 4,
     fontface = "bold",
-    nudge_x = c(0),
-    nudge_y = c(1, 2)
-  ) +
-  
-  geom_text_repel(
-    data = pangenome_df[pangenome_df$nb_members == 19, ],
-    aes(
-      x = num_fam,
-      y = nb_members,
-      label = paste("Gene family:", num_fam)
-    ),
-    size = 4,
-    fontface = "bold",
-    nudge_x = c(0),
-    nudge_y = c(-1)
+    nudge_x = c(0, 0, 0, 25, 0, 0, 0, 0),
+    nudge_y = c(1, -1, 5, 2, -1 , 1, 1, -1)
   ) +
   
   # Add a horizontal dashed line at y = 70
   geom_hline(
-    yintercept = 14,
+    yintercept = 15,
     color = "black",
     linetype = "dashed",
     alpha = 0.5
   ) +
   
   # Customize axis labels and breaks
-  scale_x_continuous(breaks = seq(0, 2000, by = 250)) +  # Display every x-axis label
-  scale_y_continuous(breaks = seq(0, max(pangenome_df$nb_members), by = 5)) +  # Display y-axis labels every 10 units
+  scale_x_continuous(breaks = seq(0, 614, by = 75)) +  # Display every x-axis label
+  scale_y_continuous(breaks = seq(0, 24, by = 5)) +  # Display y-axis labels every 10 units
   
   # Remove title and legend
   theme_minimal() +

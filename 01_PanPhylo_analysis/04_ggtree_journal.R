@@ -56,24 +56,24 @@ meta.loc$Country[meta.loc$Country == "Switzerland: Boedmerenwald"] <- "Switzerla
 colnames(meta.loc) <- c("Location")
 
 
-###############################
-# ATP synthase subunit a TREE #
-###############################
+##############
+# NAD4L TREE #
+##############
 
 # Read the tree file
 
-ATP_ssa_tree <- read.tree("tree/ATP_synthase_subunit_a_ufb.treefile")
+nad4l_tree <- read.tree("pangenome/tree/nad4l_ufb_ready.treefile")
 
 # Midpoint root the tree
 
-midpoint.root(ATP_ssa_tree)
+midpoint.root(nad4l_tree)
 
 # Draft tree
 
-ATP_ssa_tree_fig <- ggtree(ATP_ssa_tree) %<+% metadata +
-  xlim(0, 0.6) +
+nad4l_tree_fig <- ggtree(nad4l_tree) %<+% metadata +
+  xlim(0, 0.1) +
   geom_hilight(
-    mapping = aes(subset = node %in% c(24), fill = S),
+    mapping = aes(subset = node %in% c(37), fill = S),
     fill = "steelblue",
     alpha = .6,
     extend = 1
@@ -93,47 +93,47 @@ ATP_ssa_tree_fig <- ggtree(ATP_ssa_tree) %<+% metadata +
 
 # Onehot encode bootstrap values (<70 = 0; >70 = 1)
 
-ATP_ssa_tree_boot <- ATP_ssa_tree_fig$data
-ATP_ssa_tree_boot <- ATP_ssa_tree_boot[!ATP_ssa_tree_boot$isTip, ]
-ATP_ssa_tree_boot$label <- as.numeric(ATP_ssa_tree_boot$label)
-ATP_ssa_tree_boot$bootstrap <- '0'
-ATP_ssa_tree_boot$bootstrap[ATP_ssa_tree_boot$label >= 70] <- '1'
-ATP_ssa_tree_boot$bootstrap[is.na(ATP_ssa_tree_boot$label)] <- '1'
+nad4l_tree_boot <- nad4l_tree_fig$data
+nad4l_tree_boot <- nad4l_tree_boot[!nad4l_tree_boot$isTip, ]
+nad4l_tree_boot$label <- as.numeric(nad4l_tree_boot$label)
+nad4l_tree_boot$bootstrap <- '0'
+nad4l_tree_boot$bootstrap[nad4l_tree_boot$label >= 70] <- '1'
+nad4l_tree_boot$bootstrap[is.na(nad4l_tree_boot$label)] <- '1'
 
 # Add bootstrap values to the tree (black branches = bootstrap >70; grey branches = bootstrap <70)
 
-ATP_ssa_tree_fig <- ATP_ssa_tree_fig + new_scale_color() +
-  geom_tree(data = ATP_ssa_tree_boot, aes(color = bootstrap == '1')) +
+nad4l_tree_fig <- nad4l_tree_fig + new_scale_color() +
+  geom_tree(data = nad4l_tree_boot, aes(color = bootstrap == '1')) +
   scale_color_manual(name = 'Bootstrap',
                      values = setNames(c("black", "grey"), c(T, F)),
                      guide = "none")
 
 ggsave(
-  'imgs/ATP_synthase_subunit_a.png',
-  ATP_ssa_tree_fig,
-  width = 14,
+  'imgs/nad4l.png',
+  nad4l_tree_fig,
+  width = 11,
   height = 8,
   dpi = 600
 )
 
-########################
-# Cytochrome b/c1 TREE #
-########################
+#############
+# COX2 TREE #
+#############
 
 # Read the tree file
 
-Cbc1_tree <- read.tree("tree/Cytochrome_b_c1_ufb.treefile")
+cox2_tree <- read.tree("pangenome/tree/cox2_ufb_ready.treefile")
 
 # Midpoint root the tree
 
-midpoint.root(Cbc1_tree)
+midpoint.root(cox2_tree)
 
 # Draft tree
 
-Cbc1_tree_fig <- ggtree(Cbc1_tree) %<+% metadata +
-  xlim(0, 0.3) +
+cox2_tree_fig <- ggtree(cox2_tree) %<+% metadata +
+  xlim(0, 0.1) +
   geom_hilight(
-    mapping = aes(subset = node %in% c(25), fill = S),
+    mapping = aes(subset = node %in% c(33), fill = S),
     fill = "steelblue",
     alpha = .6,
     extend = 1
@@ -153,45 +153,45 @@ Cbc1_tree_fig <- ggtree(Cbc1_tree) %<+% metadata +
 
 # Onehot encode bootstrap values (<70 = 0; >70 = 1)
 
-Cbc1_tree_boot <- Cbc1_tree_fig$data
-Cbc1_tree_boot <- Cbc1_tree_boot[!Cbc1_tree_boot$isTip, ]
-Cbc1_tree_boot$label <- as.numeric(Cbc1_tree_boot$label)
-Cbc1_tree_boot$bootstrap <- '0'
-Cbc1_tree_boot$bootstrap[Cbc1_tree_boot$label >= 70] <- '1'
-Cbc1_tree_boot$bootstrap[is.na(Cbc1_tree_boot$label)] <- '1'
+cox2_tree_boot <- cox2_tree_fig$data
+cox2_tree_boot <- cox2_tree_boot[!cox2_tree_boot$isTip, ]
+cox2_tree_boot$label <- as.numeric(cox2_tree_boot$label)
+cox2_tree_boot$bootstrap <- '0'
+cox2_tree_boot$bootstrap[cox2_tree_boot$label >= 70] <- '1'
+cox2_tree_boot$bootstrap[is.na(cox2_tree_boot$label)] <- '1'
 
 # Add bootstrap values to the tree (black branches = bootstrap >70; grey branches = bootstrap <70)
 
-Cbc1_tree_fig <- Cbc1_tree_fig + new_scale_color() +
-  geom_tree(data = Cbc1_tree_boot, aes(color = bootstrap == '1')) +
+cox2_tree_fig <- cox2_tree_fig + new_scale_color() +
+  geom_tree(data = cox2_tree_boot, aes(color = bootstrap == '1')) +
   scale_color_manual(name = 'Bootstrap',
                      values = setNames(c("black", "grey"), c(T, F)),
                      guide = "none")
 
 ggsave(
-  'imgs/Cytochrome_b_c1.png',
-  Cbc1_tree_fig,
-  width = 14,
+  'imgs/cox2.png',
+  cox2_tree_fig,
+  width = 11,
   height = 8,
   dpi = 600
 )
 
-##############################################
-# NADH-quinone oxidoreductase subunit K TREE #
-##############################################
+############
+# COB TREE #
+############
 
 # Read the tree file
 
-NADHqosK_tree <- read.tree("tree/NADH-quinone_oxidoreductase_subunit_K_ufb.treefile")
+cob_tree <- read.tree("pangenome/tree/cob_ufb_ready.treefile")
 
 # Midpoint root the tree
 
-midpoint.root(NADHqosK_tree)
+midpoint.root(cob_tree)
 
 # Draft tree
 
-NADHqosK_tree_fig <- ggtree(NADHqosK_tree) %<+% metadata +
-  xlim(0, 0.5) +
+cob_tree_fig <- ggtree(cob_tree) %<+% metadata +
+  xlim(0, 0.1) +
   geom_hilight(
     mapping = aes(subset = node %in% c(29), fill = S),
     fill = "steelblue",
@@ -213,47 +213,47 @@ NADHqosK_tree_fig <- ggtree(NADHqosK_tree) %<+% metadata +
 
 # Onehot encode bootstrap values (<70 = 0; >70 = 1)
 
-NADHqosK_tree_boot <- NADHqosK_tree_fig$data
-NADHqosK_tree_boot <- NADHqosK_tree_boot[!NADHqosK_tree_boot$isTip, ]
-NADHqosK_tree_boot$label <- as.numeric(NADHqosK_tree_boot$label)
-NADHqosK_tree_boot$bootstrap <- '0'
-NADHqosK_tree_boot$bootstrap[NADHqosK_tree_boot$label >= 70] <- '1'
-NADHqosK_tree_boot$bootstrap[is.na(NADHqosK_tree_boot$label)] <- '1'
+cob_tree_boot <- cob_tree_fig$data
+cob_tree_boot <- cob_tree_boot[!cob_tree_boot$isTip, ]
+cob_tree_boot$label <- as.numeric(cob_tree_boot$label)
+cob_tree_boot$bootstrap <- '0'
+cob_tree_boot$bootstrap[cob_tree_boot$label >= 70] <- '1'
+cob_tree_boot$bootstrap[is.na(cob_tree_boot$label)] <- '1'
 
 # Add bootstrap values to the tree (black branches = bootstrap >70; grey branches = bootstrap <70)
 
-NADHqosK_tree_fig <- NADHqosK_tree_fig + new_scale_color() +
-  geom_tree(data = NADHqosK_tree_boot, aes(color = bootstrap == '1')) +
+cob_tree_fig <- cob_tree_fig + new_scale_color() +
+  geom_tree(data = cob_tree_boot, aes(color = bootstrap == '1')) +
   scale_color_manual(name = 'Bootstrap',
                      values = setNames(c("black", "grey"), c(T, F)),
                      guide = "none")
 
 ggsave(
-  'imgs/NADH-quinone_oxidoreductase_subunit_K.png',
-  NADHqosK_tree_fig,
+  'imgs/cob.png',
+  cob_tree_fig,
   width = 14,
   height = 8,
   dpi = 600
 )
 
 ##############################################
-# NADH-quinone oxidoreductase subunit K TREE #
+# COX1 TREE #
 ##############################################
 
 # Read the tree file
 
-NADHqosM_tree <- read.tree("tree/NADH-quinone_oxidoreductase_subunit_M_ufb.treefile")
+cox1_tree <- read.tree("pangenome/tree/cox1_ufb_ready.treefile")
 
 # Midpoint root the tree
 
-midpoint.root(NADHqosM_tree)
+midpoint.root(cox1_tree)
 
 # Draft tree
 
-NADHqosM_tree_fig <- ggtree(NADHqosM_tree) %<+% metadata +
-  xlim(0, 0.35) +
+cox1_tree_fig <- ggtree(cox1_tree) %<+% metadata +
+  xlim(0, 0.2) +
   geom_hilight(
-    mapping = aes(subset = node %in% c(24), fill = S),
+    mapping = aes(subset = node %in% c(28), fill = S),
     fill = "steelblue",
     alpha = .6,
     extend = 1
@@ -273,25 +273,85 @@ NADHqosM_tree_fig <- ggtree(NADHqosM_tree) %<+% metadata +
 
 # Onehot encode bootstrap values (<70 = 0; >70 = 1)
 
-NADHqosM_tree_boot <- NADHqosM_tree_fig$data
-NADHqosM_tree_boot <- NADHqosM_tree_boot[!NADHqosM_tree_boot$isTip, ]
-NADHqosM_tree_boot$label <- as.numeric(NADHqosM_tree_boot$label)
-NADHqosM_tree_boot$bootstrap <- '0'
-NADHqosM_tree_boot$bootstrap[NADHqosM_tree_boot$label >= 70] <- '1'
-NADHqosM_tree_boot$bootstrap[is.na(NADHqosM_tree_boot$label)] <- '1'
+cox1_tree_boot <- cox1_tree_fig$data
+cox1_tree_boot <- cox1_tree_boot[!cox1_tree_boot$isTip, ]
+cox1_tree_boot$label <- as.numeric(cox1_tree_boot$label)
+cox1_tree_boot$bootstrap <- '0'
+cox1_tree_boot$bootstrap[cox1_tree_boot$label >= 70] <- '1'
+cox1_tree_boot$bootstrap[is.na(cox1_tree_boot$label)] <- '1'
 
 # Add bootstrap values to the tree (black branches = bootstrap >70; grey branches = bootstrap <70)
 
-NADHqosM_tree_fig <- NADHqosM_tree_fig + new_scale_color() +
-  geom_tree(data = NADHqosM_tree_boot, aes(color = bootstrap == '1')) +
+cox1_tree_fig <- cox1_tree_fig + new_scale_color() +
+  geom_tree(data = cox1_tree_boot, aes(color = bootstrap == '1')) +
   scale_color_manual(name = 'Bootstrap',
                      values = setNames(c("black", "grey"), c(T, F)),
                      guide = "none")
 
 ggsave(
-  'imgs/NADH-quinone_oxidoreductase_subunit_M.png',
-  NADHqosM_tree_fig,
-  width = 14,
+  'imgs/cox1.png',
+  cox1_tree_fig,
+  width = 11,
+  height = 8,
+  dpi = 600
+)
+
+##############
+# ALL TREE #
+##############
+
+# Read the tree file
+
+ALL_tree <- read.tree("phylogenomics/tree/All/All_ready.treefile")
+
+# Midpoint root the tree
+
+midpoint.root(ALL_tree)
+
+# Draft tree
+
+ALL_tree_fig <- ggtree(ALL_tree) %<+% metadata +
+  xlim(0, 0.3) +
+  geom_hilight(
+    mapping = aes(subset = node %in% c(29), fill = S),
+    fill = "steelblue",
+    alpha = .6,
+    extend = 1
+  ) +
+  geom_tiplab(
+    aes(
+      label = AN_OrganismName,
+      fontface = ifelse(grepl("^NC_033907", AN_OrganismName), "bold", "plain"),
+    ),
+    align = TRUE,
+    geom = "label",
+    fill = "white",
+    label.size = 0
+  ) +
+  scale_color_identity() +
+  geom_treescale(x = 0, y = -0.25, width = 0.05)
+
+# Onehot encode bootstrap values (<70 = 0; >70 = 1)
+
+ALL_tree_boot <- ALL_tree_fig$data
+ALL_tree_boot <- ALL_tree_boot[!ALL_tree_boot$isTip, ]
+ALL_tree_boot$label <- as.numeric(ALL_tree_boot$label)
+ALL_tree_boot$bootstrap <- '0'
+ALL_tree_boot$bootstrap[ALL_tree_boot$label >= 70] <- '1'
+ALL_tree_boot$bootstrap[is.na(ALL_tree_boot$label)] <- '1'
+
+# Add bootstrap values to the tree (black branches = bootstrap >70; grey branches = bootstrap <70)
+
+ALL_tree_fig <- ALL_tree_fig + new_scale_color() +
+  geom_tree(data = ALL_tree_boot, aes(color = bootstrap == '1')) +
+  scale_color_manual(name = 'Bootstrap',
+                     values = setNames(c("black", "grey"), c(T, F)),
+                     guide = "none")
+
+ggsave(
+  'imgs/ALL.png',
+  ALL_tree_fig,
+  width = 11,
   height = 8,
   dpi = 600
 )
@@ -300,11 +360,27 @@ ggsave(
 ###### COMBINED ######
 ######################
 
-everything <- (ATP_ssa_tree_fig + Cbc1_tree_fig) / (NADHqosK_tree_fig + NADHqosM_tree_fig) + plot_annotation(tag_levels = list(c("A", "B", "C", "D")))
+conserved <- (nad4l_tree_fig + cox2_tree_fig) / (cob_tree_fig + cox1_tree_fig) + plot_annotation(tag_levels = list(c("A", "B", "C", "D")))
 ggsave(
-  "imgs/combined_tree.png",
-  plot = everything,
+  "imgs/conserved_tree.png",
+  plot = conserved,
   width = 28,
+  height = 16,
+  dpi = 600
+)
+
+everything <- ALL_tree_fig + (nad4l_tree_fig + cox2_tree_fig) / (cob_tree_fig + cox1_tree_fig) + plot_annotation(tag_levels = list(c("A", "B", "C", "D", "E")))
+
+everything <- ALL_tree_fig + 
+  (nad4l_tree_fig + cox2_tree_fig) / 
+  (cob_tree_fig + cox1_tree_fig) + 
+  plot_annotation(tag_levels = list(c("A", "B", "C", "D", "E"))) +
+  plot_layout(heights = c(12, 1), widths = c(0.6, 1.6))  # Make second row wider
+
+ggsave(
+  "imgs/everything_tree.png",
+  plot = everything,
+  width = 38,
   height = 16,
   dpi = 600
 )
