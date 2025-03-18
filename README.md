@@ -8,6 +8,8 @@
 
 _Figure 1. Pipeline overview._
 
+**THE PIPELINE HAD MANY ADJUSTMENTS! IT IS TO BE REWORKED**
+
 ### System
 
 - OS: macOS Sequoia 15.3.1
